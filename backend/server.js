@@ -59,7 +59,7 @@ initializeGrid();
 setInterval(async () => {
   const now = new Date();
   const decayThreshold = new Date(now.getTime() - TILE_DECAY_MS);
-  
+
   const decayedTiles = await Tile.find({
     ownerId: { $ne: null },
     capturedAt: { $lt: decayThreshold }
@@ -77,18 +77,21 @@ setInterval(async () => {
   }
 }, 5000);
 
+app.get("/", (req, res) => {
+  res.send("TileWars Backend Running 🚀");
+});
 app.get('/api/grid', async (req, res) => {
   try {
     const tiles = await Tile.find({});
     res.json(tiles);
-  } catch(e) {
+  } catch (e) {
     res.status(500).json({ error: e.message });
   }
 });
 
 io.on('connection', (socket) => {
   console.log('User connected:', socket.id);
-  
+
   socket.on('join', (userData) => {
     activeUsers.set(socket.id, userData);
     io.emit('usersCount', activeUsers.size);
@@ -100,13 +103,13 @@ io.on('connection', (socket) => {
     try {
       const updatedTile = await Tile.findOneAndUpdate(
         { x, y, ownerId: null },
-        { 
-          $set: { 
-            ownerId: user.id, 
-            ownerColor: user.color, 
+        {
+          $set: {
+            ownerId: user.id,
+            ownerColor: user.color,
             ownerName: user.name,
             capturedAt: new Date()
-          } 
+          }
         },
         { new: true }
       );
@@ -125,8 +128,8 @@ io.on('connection', (socket) => {
   socket.on('disconnect', () => {
     console.log('User disconnected:', socket.id);
     const user = activeUsers.get(socket.id);
-    if(user) {
-        io.emit('activity', { type: 'leave', message: `${user.name} left the game`, time: new Date() });
+    if (user) {
+      io.emit('activity', { type: 'leave', message: `${user.name} left the game`, time: new Date() });
     }
     activeUsers.delete(socket.id);
     io.emit('usersCount', activeUsers.size);
