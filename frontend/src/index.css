@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-slate-950 text-slate-50;
+  }
+}
+
+.tile-grid {
+  display: grid;
+  grid-template-columns: repeat(30, minmax(0, 1fr));
+  gap: 1px;
+  background-color: #1e293b; /* slate-800 */
+  border: 1px solid #334155; /* slate-700 */
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+}
+
+.tile {
+  aspect-ratio: 1 / 1;
+  background-color: #0f172a; /* slate-900 */
+  transition: all 0.2s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.tile:hover {
+  transform: scale(1.1);
+  z-index: 10;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+}
+
+.tile.owned {
+  /* color added inline */
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+}
+
+/* Add territory glowing borders */
+.tile.territory-top { border-top: 2px solid currentColor; box-shadow: 0 -5px 10px -5px currentColor; }
+.tile.territory-bottom { border-bottom: 2px solid currentColor; box-shadow: 0 5px 10px -5px currentColor; }
+.tile.territory-left { border-left: 2px solid currentColor; box-shadow: -5px 0 10px -5px currentColor; }
+.tile.territory-right { border-right: 2px solid currentColor; box-shadow: 5px 0 10px -5px currentColor; }
+
+/* Custom scrollbar for activity feed */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
